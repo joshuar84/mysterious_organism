@@ -20,7 +20,7 @@ const randNum = () => {
   return parseInt(randNum, 10);
 }
 
-const pAequorFactory = (number = randNum(), arrayOfDNA) => {
+const pAequorFactory = (arrayOfDNA, number = randNum()) => {
   return {
 
     specimenNum: number,
@@ -70,13 +70,28 @@ const pAequorFactory = (number = randNum(), arrayOfDNA) => {
       const gPercent = gCount / length;
       const gPolish = gPercent.toPrecision(2);
       const cPolish = cPercent.toPrecision(2)
-      if (gPolish >= percent) {
-        return true, `The specimen contains:\n${gPolish * 100}% G bases\n${cPolish * 100}% C bases\nThe specimen will likely survive.`;
-      } else if (cPolish >= percent) {
-        return true, `The specimen contains:\n${cPolish * 100}% C bases\n${gPolish * 100}% G bases\nThe specimen will likely survive.`;
-      } else if (cPolish < percent && gPolish < percent) {
-        return false, `The specimen contains:\n${cPolish * 100}% C bases\n${gPolish * 100}% G bases\nThe specimen will not likely survive.`;
+      if (gPolish >= percent || cPolish >= percent) {
+        return true;
+      } else {
+        return false;
       }
+    },
+
+    complementStrand(arrayOfDNA) {
+      const result = arrayOfDNA.map((el) => {
+        if (el === "A") {
+          return "T";
+        } else if (el === "T") {
+          return "A";
+        } else if (el === "G") {
+          return "C";
+        } else if (el === "C")  {
+          return "G";
+        } else {
+          return el;
+        }
+      });
+      return result;
     },
 
   };
@@ -90,13 +105,14 @@ const find30 = (rdStrand, maker) => {
     if (organism.willLikelySurvive(organism.dna)) {
       arrayOf30Obj.push(organism);
       count++;
-      console.log(count);
     };
   };
   return arrayOf30Obj
 };
 
-const thirtyThrivers = find30(mockUpStrand, pAequorFactory);
-console.log(thirtyThrivers);
+// const thirtyThrivers = find30(mockUpStrand, pAequorFactory);
+// console.log(thirtyThrivers);
 // const [thriver1, thriver2, thriver3, thriver4, thriver5, thriver6, thriver7, thriver8, thriver9, thriver10, thriver11, thriver12, thriver13, thriver14, thriver15, thriver16, thriver17, thriver18, thriver19, thriver20, thriver21, thriver22, thriver23, thriver24, thriver25, thriver26, thriver27, thriver28, thriver29, thriver30] = thirtyThrivers;
 
+const pAequor1 = pAequorFactory(mockUpStrand(), 1);
+console.log(pAequor1, pAequor1.complementStrand(pAequor1.dna));
